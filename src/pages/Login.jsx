@@ -13,36 +13,33 @@ function Login() {
     handleSubmit,
     formState: { errors, isSubmitSuccessful, isSubmitting },
   } = useForm();
+  const BASE_URL = import.meta.env.BASE_URL;
 
-  console.log(errors);
   const onSubmit = (data) => {
     axios
-      .post("http://localhost:4000/api/user/login", data)
-      .then(function (response) {
-        console.log("Response:", response);
-        console.log("Response Data Message:", response?.data?.message);
-        toast.success(response?.data?.message);
+      .post(`http://localhost:3000/auth/login`, data)
+      .then((res) => {
+        toast.success(res.data.message);
+        localStorage.setItem("token", res.data.token);
+        navigate("/dashboard/home");
       })
       .catch(function (error) {
-        console.error("Error:", error);
-        console.error("Error Message:", error?.message);
         toast.error(error?.response?.data?.message);
       });
   };
 
-  const guestUser = (data)=>{
+  const guestUser = (data) => {
     axios
       .post("http://localhost:4000/api/user/login", data)
       .then(function (response) {
-        console.log(response)
-        toast.success(response?.data?.message)
+        console.log(response);
+        toast.success(response?.data?.message);
       })
       .catch(function (error) {
-        console.log(error)
-        toast.error(error?.response?.data?.message)
+        console.log(error);
+        toast.error(error?.response?.data?.message);
       });
-  }
-
+  };
 
   useEffect(() => {
     reset();
@@ -127,7 +124,6 @@ function Login() {
                   <button className="inline-flex w-full items-center justify-center rounded-md bg-black px-3.5 py-2.5 font-extrathin leading-7 text-white hover:bg-black/80">
                     Get Started
                   </button>
-                  
                 </div>
               </div>
             </form>

@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate, useNavigation } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import { toast } from "react-toastify";
@@ -12,18 +12,21 @@ function Register() {
     formState: { errors, isSubmitSuccessful, isSubmitting, isSubmitted },
   } = useForm();
 
+  const navigate = useNavigate();
+
   const onSubmit = (data) => {
     axios
-      .post("http://localhost:3000/auth/register", data)
+      .post(`http://localhost:3000/auth/register`, data)
       .then((res) => {
-        console.log("RETS", res);
         if (res.status) {
           toast.success(res.data.message);
+          localStorage.setItem("token", res.data.token);
+          navigate("/dashboard/home");
         }
       })
       .catch(function (error) {
         console.log(error);
-          console.log("error in catch");
+        console.log("error in catch");
 
         toast.error(error?.response?.data?.message);
       });
